@@ -152,11 +152,11 @@ public class TreeUtil {
         return date;
     }
 
-    public Date strToDateTime(String str) {
+    private Date strToDateTime(String str) {
         return getDate(str, "yyyy-MM-dd HH:mm:ss");
     }
 
-    public Date strToDate(String str) {
+    private Date strToDate(String str) {
         return getDate(str, "yyyy-MM-dd");
     }
 }
