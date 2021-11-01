@@ -39,46 +39,15 @@ public class TreeUtil {
         if (sort != null) {
             TreeSort annotation = sort.getAnnotation(TreeSort.class);
             TreeSortRule rule = annotation.rule();
-            TreeSortType type = annotation.type();
 
             Set<Object> keys = map.keySet();
             for (Object key : keys) {
                 List<T> list = map.get(key).stream()
                         .sorted(Comparator.comparing(sub -> {
                             try {
-                                switch (type) {
-                                    case LONG:
-                                        Object o = sort.get(sub);
-                                        if (o != null) {
-                                            return Long.parseLong(o.toString());
-                                        } else {
-                                            return 1L;
-                                        }
-                                    case DATE:
-                                        if (sort.get(sub) != null) {
-                                            return strToDate(sort.get(sub).toString()).getTime();
-                                        } else {
-                                            return 1L;
-                                        }
-                                    case DATETIME:
-                                        if (sort.get(sub) != null) {
-                                            return strToDateTime(sort.get(sub).toString()).getTime();
-                                        } else {
-                                            return 1L;
-                                        }
-                                    default:
-                                        return (long) sort.get(sub).hashCode();
-                                }
+                                return sort.get(sub).hashCode();
                             } catch (IllegalAccessException e) {
-                                switch (type) {
-                                    case LONG:
-                                        return 1L;
-                                    case DATE:
-                                    case DATETIME:
-                                        return System.currentTimeMillis();
-                                    default:
-                                        return (long) "".hashCode();
-                                }
+                                return 1;
                             }
                         }))
                         .collect(Collectors.toList());
@@ -125,16 +94,16 @@ public class TreeUtil {
     private <T> void setFields(Class<T> clazz) {
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field declaredField : declaredFields) {
-            if (declaredField.getAnnotation(TreeId.class) != null) {
+            if (declaredField.isAnnotationPresent(TreeId.class)) {
                 declaredField.setAccessible(true);
                 id = declaredField;
-            } else if (declaredField.getAnnotation(TreeParentId.class) != null) {
+            } else if (declaredField.isAnnotationPresent(TreeParentId.class)) {
                 declaredField.setAccessible(true);
                 parentId = declaredField;
-            } else if (declaredField.getAnnotation(TreeChild.class) != null) {
+            } else if (declaredField.isAnnotationPresent(TreeChild.class)) {
                 declaredField.setAccessible(true);
                 child = declaredField;
-            } else if (declaredField.getAnnotation(TreeSort.class) != null) {
+            } else if (declaredField.isAnnotationPresent(TreeSort.class)) {
                 declaredField.setAccessible(true);
                 sort = declaredField;
             }
