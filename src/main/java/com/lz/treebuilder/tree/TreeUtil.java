@@ -1,24 +1,21 @@
 package com.lz.treebuilder.tree;
 
 import java.lang.reflect.Field;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TreeUtil {
-
-    private String[] rootKeys = {"0"};
+    private Object[] rootKeys = {"0"};
 
     Field id, parentId, child, sort;
 
-    public TreeUtil rootKey(String... keys) {
+    public TreeUtil rootKey(Object... keys) {
         rootKeys = keys;
         return this;
     }
 
-    public TreeUtil rootKey(Collection<String> keys) {
-        rootKeys = keys.toArray(new String[0]);
+    public TreeUtil rootKey(Collection<Object> keys) {
+        rootKeys = keys.toArray(new Object[0]);
         return this;
     }
 
@@ -62,7 +59,7 @@ public class TreeUtil {
 
         // get root
         List<T> treeList = new ArrayList<>();
-        for (String rootKey : rootKeys) {
+        for (Object rootKey : rootKeys) {
             treeList.addAll(map.get(rootKey));
         }
         if (treeList.isEmpty()) {
@@ -108,24 +105,5 @@ public class TreeUtil {
                 sort = declaredField;
             }
         }
-    }
-
-    private Date getDate(String str, String pattern) {
-        Date date;
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-            date = formatter.parse(str);
-        } catch (ParseException e) {
-            return new Date();
-        }
-        return date;
-    }
-
-    private Date strToDateTime(String str) {
-        return getDate(str, "yyyy-MM-dd HH:mm:ss");
-    }
-
-    private Date strToDate(String str) {
-        return getDate(str, "yyyy-MM-dd");
     }
 }

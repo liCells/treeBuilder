@@ -4,5 +4,5 @@ public enum TreeSortType {
     LONG,
     DATE,
     DATETIME,
-    STR;
+    STR
 }
